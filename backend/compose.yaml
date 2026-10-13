@@ -1,0 +1,35 @@
+# Docker Compose-fil för filmappens databas
+# Starta med: docker compose up -d
+# Stoppa med: docker compose down
+
+# Lista över containrar som projektet behöver
+services:
+
+  # Databasen för filmappen
+  db:
+    # PostgreSQL version 16, samma som du redan har
+    image: postgres:16
+
+    # Namnet som syns i Docker Desktop
+    container_name: filmapp-db
+
+    # Inloggningsuppgifter och namn på databasen.
+    # Detta är bara för lokal utveckling på den egna datorn.
+    environment:
+      POSTGRES_DB: filmapp
+      POSTGRES_USER: filmapp
+      POSTGRES_PASSWORD: filmapp
+
+    # Port på datorn : port inne i containern.
+    # 5433 på datorn så att den inte krockar med my-postgres på 5432.
+    ports:
+      - "5433:5432"
+
+    # Sparar databasens data i en volym,
+    # så att datan finns kvar även om containern tas bort
+    volumes:
+      - filmapp-data:/var/lib/postgresql/data
+
+# Definition av volymen som används ovan
+volumes:
+  filmapp-data:
