@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 // @Configuration betyder att klassen innehåller inställningar för Spring
@@ -33,5 +35,12 @@ public class SecurityConfig {
             );
 
         return http.build();
+    }
+
+    // Krypterar lösenord med BCrypt.
+    // Som en @Bean kan den användas i andra klasser, till exempel vid registrering
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
