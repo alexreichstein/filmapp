@@ -5,24 +5,37 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.alexreichstein.filmapp.dto.AuthResponse;
+import com.alexreichstein.filmapp.dto.LoginRequest;
 import com.alexreichstein.filmapp.dto.RegisterRequest;
 import com.alexreichstein.filmapp.model.User;
 import com.alexreichstein.filmapp.repository.UserRepository;
+import com.alexreichstein.filmapp.security.JwtService;
 
-// Logiken för registrering, och senare även inloggning
+// Logiken för registrering och inloggning
 @Service
 public class AuthService {
+
+    // Samma felmeddelande oavsett om användaren saknas eller lösenordet är fel,
+    // så att ingen kan ta reda på vilka användarnamn som finns
+    private static final String INVALID_LOGIN = "Fel användarnamn eller lösenord";
 
     // Repositoryt för användare
     private final UserRepository userRepository;
 
-    // Krypterar lösenord (vår @Bean från SecurityConfig)
+    // Krypterar och jämför lösenord (vår @Bean från SecurityConfig)
     private final PasswordEncoder passwordEncoder;
 
-    // Spring skickar in båda automatiskt via konstruktorn
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    // Skapar tokens
+    private final JwtService jwtService;
+
+    // Spring skickar in alla tre automatiskt via konstruktorn
+    public AuthService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     // Registrerar en ny användare
@@ -39,5 +52,24 @@ public class AuthService {
         // Skapar och sparar den nya användaren
         User user = new User(request.username(), encodedPassword);
         userRepository.save(user);
+    }
+
+    // Loggar in en användare och returnerar en token
+    public AuthResponse login(LoginRequest request) {
+
+        // Hämtar användaren. Finns den inte: 401 Unauthorized
+        User user = userRepository.findByUsername(request.username())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, INVALID_LOGIN));
+
+        // Jämför det inskrivna lösenordet med det krypterade i databasen.
+        // matches() krypterar det inskrivna lösenordet och jämför resultaten
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, INVALID_LOGIN);
+        }
+
+        // Allt stämmer: skapa en token för användaren
+        String token = jwtService.generateToken(user.getUsername());
+
+        return new AuthResponse(token, user.getUsername());
     }
 }
