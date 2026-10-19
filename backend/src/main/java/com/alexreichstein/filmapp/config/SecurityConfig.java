@@ -28,8 +28,13 @@ public class SecurityConfig {
 
             // Reglerna för vilka adresser som är öppna och vilka som är skyddade
             .authorizeHttpRequests(auth -> auth
+                // Registrering och inloggning måste vara öppna, annars kan ingen logga in
+                .requestMatchers("/api/auth/**").permitAll()
                 // Alla får hämta filmer, även utloggade
                 .requestMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
+                // Springs interna felsida. Utan denna rad blir alla fel (till exempel 400 och 409)
+                // istället 403 Forbidden, eftersom felsidan också skulle vara låst
+                .requestMatchers("/error").permitAll()
                 // Allt annat kräver inloggning
                 .anyRequest().authenticated()
             );
