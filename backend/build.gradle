@@ -1,29 +1,51 @@
+// Plugins som behövs för ett Spring Boot-projekt i Java
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.1.1'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
+// Projektets namn och version
 group = 'com.alexreichstein'
 version = '0.0.1-SNAPSHOT'
 
+// Projektet använder Java 21
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
 
+// Var biblioteken laddas ner ifrån
 repositories {
 	mavenCentral()
 }
 
+// Alla bibliotek som projektet använder
 dependencies {
+	// Databas med JPA och Hibernate
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// Säkerhet, inloggning och skyddade endpoints
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// Validering av indata, till exempel @NotBlank och @Size
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	// REST API med controllers
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
+	// JWT-biblioteket jjwt
+	// api: klasserna vi använder i vår kod
+	implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
+	// impl: själva implementationen, behövs bara när programmet körs
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
+	// jackson: gör om innehållet i token till och från JSON
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
+
+	// Automatisk omstart när koden sparas, bara under utveckling
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// Kopplingen till PostgreSQL
 	runtimeOnly 'org.postgresql:postgresql'
+
+	// Bibliotek för tester
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
@@ -31,6 +53,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+// Testerna körs med JUnit
 tasks.named('test') {
 	useJUnitPlatform()
 }
