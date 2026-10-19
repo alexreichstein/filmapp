@@ -1,0 +1,24 @@
+info:
+  name: Update Review
+  type: http
+  seq: 6
+
+http:
+  method: PATCH
+  url: http://localhost:8080/api/reviews/1
+  body:
+    type: json
+    data: |-
+      {
+        "rating": 1
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJsaXNhIiwiaWF0IjoxNzkyNDE4NTI2LCJleHAiOjE3OTI1MDQ5MjZ9.LgrYqWErfnOYbM_1jjzEkUoOrso46kWCN-iHuQ3bIxwDiOMeZ5CodVdPi1BxPymQ
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

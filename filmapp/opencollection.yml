@@ -2,6 +2,22 @@ opencollection: 1.0.0
 
 info:
   name: filmapp
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhbGV4IiwiaWF0IjoxNzkyNDE3ODg4LCJleHAiOjE3OTI1MDQyODh9.qs2iPLW8WIvd97MyIYXzwDhbPUE5jux0-7Gi-S1DxOXRUM7A0TFy66xZXe1bVuUU
 bundled: false
 extensions:
   bruno:
