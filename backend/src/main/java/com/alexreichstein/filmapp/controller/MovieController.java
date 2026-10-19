@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alexreichstein.filmapp.model.Movie;
@@ -27,10 +28,23 @@ public class MovieController {
     }
 
     // GET /api/movies
-    // Hämtar alla filmer och skickar tillbaka dem som en JSON-lista
+    // Med valfria query-parametrar, till exempel:
+    // /api/movies?search=dark&genre=Action&sort=newest
+    // @RequestParam(required = false) betyder att parametern inte måste skickas,
+    // och då blir värdet null
     @GetMapping
-    public List<Movie> getAllMovies() {
-        return movieService.getAllMovies();
+    public List<Movie> getMovies(@RequestParam(required = false) String search,
+                                 @RequestParam(required = false) String genre,
+                                 @RequestParam(required = false) String sort) {
+        return movieService.getMovies(search, genre, sort);
+    }
+
+    // GET /api/movies/genres
+    // Alla genrer som finns, används för filterknapparna i appen.
+    // Spring väljer den här före /{id} eftersom "genres" är en exakt adress
+    @GetMapping("/genres")
+    public List<String> getGenres() {
+        return movieService.getGenres();
     }
 
     // GET /api/movies/{id}, till exempel /api/movies/3
