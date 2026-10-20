@@ -9,6 +9,7 @@ import MovieDetailsScreen from '../screens/MovieDetailsScreen.js';
 import MovieListScreen from '../screens/MovieListScreen.js';
 import ProfileScreen from '../screens/ProfileScreen.js';
 import RegisterScreen from '../screens/RegisterScreen.js';
+import ReviewFormScreen from '../screens/ReviewFormScreen.js';
 
 // Skapar stack-navigeringen. Skärmarna läggs "på varandra",
 // och tillbaka-knappen tar bort den översta
@@ -70,6 +71,14 @@ export default function RootNavigator() {
             name="Profile"
             component={ProfileScreen}
             options={{ title: 'Min profil' }}
+          />
+          <Stack.Screen
+            name="ReviewForm"
+            component={ReviewFormScreen}
+            // Rubriken beror på om en recension skickades med (ändra) eller inte (skriv)
+            options={({ route }) => ({
+              title: route.params.review ? 'Ändra recension' : 'Skriv recension',
+            })}
           />
         </Stack.Group>
       )}

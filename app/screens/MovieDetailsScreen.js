@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { apiRequest } from '../api/client.js';
 import PrimaryButton from '../components/PrimaryButton.js';
 import ReviewCard from '../components/ReviewCard.js';
+import { AuthContext } from '../context/AuthContext.js';
 
 // Räknar ut snittbetyget från recensionerna, med en decimal.
 // Returnerar null om det inte finns några recensioner
@@ -19,14 +21,17 @@ function getAverageRating(reviews) {
 
 // Detaljvy för en film med dess recensioner (US9, grund för VG5).
 // route.params innehåller movieId som skickades från filmlistan
-export default function MovieDetailsScreen({ route }) {
+export default function MovieDetailsScreen({ route, navigation }) {
   const { movieId } = route.params;
+
+  // Inloggningen, för att visa rätt knapp och hitta användarens egen recension
+  const { isLoggedIn, username } = useContext(AuthContext);
 
   // Filmen och dess recensioner från API:t
   const [movie, setMovie] = useState(null);
   const [reviews, setReviews] = useState([]);
 
-  // True medan data hämtas
+  // True medan data hämtas första gången
   const [loading, setLoading] = useState(true);
 
   // Fel för filmen (hela skärmen) och för recensionerna (bara den delen)
@@ -68,12 +73,16 @@ export default function MovieDetailsScreen({ route }) {
     loadDetails();
   }
 
-  // Körs en gång när skärmen visas
-  useEffect(() => {
-    loadDetails();
-  }, [movieId]);
+  // Körs varje gång skärmen visas, även när användaren kommer tillbaka
+  // från recensionsformuläret. Då syns en ny eller ändrad recension direkt.
+  // useCallback gör att funktionen inte skapas om vid varje omritning
+  useFocusEffect(
+    useCallback(() => {
+      loadDetails();
+    }, [movieId])
+  );
 
-  // Medan data hämtas (US17)
+  // Medan data hämtas första gången (US17)
   if (loading) {
     return (
       <View style={styles.center}>
@@ -96,6 +105,47 @@ export default function MovieDetailsScreen({ route }) {
   }
 
   const averageRating = getAverageRating(reviews);
+
+  // Användarens egen recension av filmen, om den finns
+  const myReview = isLoggedIn
+    ? reviews.find((review) => review.username === username)
+    : undefined;
+
+  // Knappen för recensioner beror på inloggning och om användaren redan har recenserat
+  let reviewButton;
+
+  if (!isLoggedIn) {
+    reviewButton = (
+      <PrimaryButton
+        title="Logga in för att skriva en recension"
+        variant="secondary"
+        onPress={() => navigation.navigate('Login')}
+      />
+    );
+  } else if (myReview) {
+    reviewButton = (
+      <PrimaryButton
+        title="Ändra din recension"
+        variant="secondary"
+        onPress={() =>
+          navigation.navigate('ReviewForm', {
+            movieId,
+            movieTitle: movie.title,
+            review: myReview,
+          })
+        }
+      />
+    );
+  } else {
+    reviewButton = (
+      <PrimaryButton
+        title="Skriv recension"
+        onPress={() =>
+          navigation.navigate('ReviewForm', { movieId, movieTitle: movie.title })
+        }
+      />
+    );
+  }
 
   // Affisch eller platshållare med första bokstaven, som i MovieCard
   const poster = movie.posterUrl ? (
@@ -132,6 +182,8 @@ export default function MovieDetailsScreen({ route }) {
           Snittbetyg {averageRating}/10 ({reviews.length} st)
         </Text>
       )}
+
+      <View style={styles.reviewButtonArea}>{reviewButton}</View>
 
       {reviewsError && (
         <Text style={styles.reviewsError} accessibilityRole="alert">
@@ -225,6 +277,9 @@ const styles = StyleSheet.create({
   average: {
     fontSize: 16,
     marginBottom: 12,
+  },
+  reviewButtonArea: {
+    marginBottom: 16,
   },
   reviewsError: {
     color: '#b91c1c',
