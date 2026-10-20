@@ -6,6 +6,7 @@ import { apiRequest } from '../api/client.js';
 import PrimaryButton from '../components/PrimaryButton.js';
 import ReviewCard from '../components/ReviewCard.js';
 import { AuthContext } from '../context/AuthContext.js';
+import useDeleteReview from '../hooks/useDeleteReview.js';
 
 // Räknar ut snittbetyget från recensionerna, med en decimal.
 // Returnerar null om det inte finns några recensioner
@@ -26,6 +27,9 @@ export default function MovieDetailsScreen({ route, navigation }) {
 
   // Inloggningen, för att visa rätt knapp och hitta användarens egen recension
   const { isLoggedIn, username } = useContext(AuthContext);
+
+  // Vår egen hook för att ta bort recensioner
+  const { confirmDelete, deletingId } = useDeleteReview();
 
   // Filmen och dess recensioner från API:t
   const [movie, setMovie] = useState(null);
@@ -71,6 +75,12 @@ export default function MovieDetailsScreen({ route, navigation }) {
   function handleRetry() {
     setLoading(true);
     loadDetails();
+  }
+
+  // Tar bort recensionen ur listan när borttagningen har lyckats.
+  // Snittbetyget och knappen uppdateras automatiskt eftersom de räknas ut från listan
+  function handleDeleted(reviewId) {
+    setReviews((current) => current.filter((review) => review.id !== reviewId));
   }
 
   // Körs varje gång skärmen visas, även när användaren kommer tillbaka
@@ -147,6 +157,28 @@ export default function MovieDetailsScreen({ route, navigation }) {
     );
   }
 
+  // Ritar en recension. Användarens egen recension får en knapp för att ta bort den
+  function renderReview({ item }) {
+    const isMine = item.id === myReview?.id;
+
+    return (
+      <ReviewCard review={item}>
+        {isMine && (
+          <View style={styles.cardActions}>
+            <PrimaryButton
+              title="Ta bort"
+              variant="danger"
+              accessibilityLabel="Ta bort din recension"
+              // Snurra på knappen medan just den här recensionen tas bort
+              loading={deletingId === item.id}
+              onPress={() => confirmDelete(item, handleDeleted)}
+            />
+          </View>
+        )}
+      </ReviewCard>
+    );
+  }
+
   // Affisch eller platshållare med första bokstaven, som i MovieCard
   const poster = movie.posterUrl ? (
     <Image source={{ uri: movie.posterUrl }} style={styles.poster} accessible={false} />
@@ -202,7 +234,7 @@ export default function MovieDetailsScreen({ route, navigation }) {
       contentContainerStyle={styles.listContent}
       data={reviews}
       keyExtractor={(item) => String(item.id)}
-      renderItem={({ item }) => <ReviewCard review={item} />}
+      renderItem={renderReview}
       ListHeaderComponent={header}
       ListEmptyComponent={
         reviewsError ? null : (
@@ -285,5 +317,8 @@ const styles = StyleSheet.create({
     color: '#b91c1c',
     fontSize: 16,
     marginBottom: 12,
+  },
+  cardActions: {
+    marginTop: 10,
   },
 });

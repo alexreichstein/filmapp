@@ -5,7 +5,8 @@ import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 // onPress:  vad som händer vid tryck
 // loading:  visar en snurra och stänger av knappen medan något pågår
 // disabled: stänger av knappen
-// variant:  'primary' (fylld) eller 'secondary' (ljus med kantlinje)
+// variant:  'primary' (fylld), 'secondary' (ljus med kantlinje)
+//           eller 'danger' (röd, för att ta bort något)
 // accessibilityLabel: text för skärmläsare, annars används title
 export default function PrimaryButton({
   title,
@@ -18,6 +19,7 @@ export default function PrimaryButton({
   // Knappen går inte att trycka på om den är avstängd eller något pågår
   const isDisabled = disabled || loading;
   const isSecondary = variant === 'secondary';
+  const isDanger = variant === 'danger';
 
   return (
     <Pressable
@@ -25,6 +27,7 @@ export default function PrimaryButton({
       style={({ pressed }) => [
         styles.button,
         isSecondary && styles.secondary,
+        isDanger && styles.danger,
         pressed && styles.pressed,
         isDisabled && styles.disabled,
       ]}
@@ -59,6 +62,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 2,
     borderColor: '#1e3a8a',
+  },
+  danger: {
+    backgroundColor: '#b91c1c',
   },
   pressed: {
     opacity: 0.8,
