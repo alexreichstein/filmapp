@@ -7,10 +7,11 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 
+import ErrorMessage from '../components/ErrorMessage.js';
+import FormField from '../components/FormField.js';
 import PrimaryButton from '../components/PrimaryButton.js';
 import { AuthContext } from '../context/AuthContext.js';
 
@@ -69,42 +70,29 @@ export default function LoginScreen({ navigation }) {
       >
         <Text style={styles.title}>Logga in</Text>
 
-        <Text style={styles.label}>Användarnamn</Text>
-        <TextInput
-          style={styles.input}
+        <FormField
+          label="Användarnamn"
           value={username}
           onChangeText={setUsername}
           // Ingen stor bokstav eller autokorrigering i användarnamn
           autoCapitalize="none"
           autoCorrect={false}
           autoComplete="username"
-          accessibilityLabel="Användarnamn"
         />
 
-        <Text style={styles.label}>Lösenord</Text>
-        <TextInput
-          style={styles.input}
+        <FormField
+          label="Lösenord"
           value={password}
           onChangeText={setPassword}
           // Döljer lösenordet med punkter
           secureTextEntry
           autoCapitalize="none"
           autoComplete="password"
-          accessibilityLabel="Lösenord"
           // Enter på tangentbordet skickar formuläret
           onSubmitEditing={handleLogin}
         />
 
-        {errorMessage && (
-          <Text
-            style={styles.error}
-            // Skärmläsare läser upp felet direkt när det visas
-            accessibilityRole="alert"
-            accessibilityLiveRegion="polite"
-          >
-            {errorMessage}
-          </Text>
-        )}
+        <ErrorMessage message={errorMessage} />
 
         <View style={styles.buttonArea}>
           <PrimaryButton
@@ -142,23 +130,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 6,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    marginBottom: 16,
-  },
-  error: {
-    color: '#b91c1c',
-    fontSize: 16,
-    marginBottom: 16,
   },
   buttonArea: {
     marginTop: 8,
