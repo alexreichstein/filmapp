@@ -1,0 +1,53 @@
+import { useContext } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import { AuthContext } from '../context/AuthContext.js';
+import HomeScreen from '../screens/HomeScreen.js';
+import MovieListScreen from '../screens/MovieListScreen.js';
+
+// Skapar stack-navigeringen. Skärmarna läggs "på varandra",
+// och tillbaka-knappen tar bort den översta
+const Stack = createNativeStackNavigator();
+
+// Alla skärmar i appen.
+// Ligger i en egen fil så att den kan läsa inloggningen från AuthContext
+export default function RootNavigator() {
+  const { isRestoring } = useContext(AuthContext);
+
+  // Medan appen kontrollerar en sparad token visas en laddningsindikator,
+  // så att användaren inte ser fel skärmar en kort stund
+  if (isRestoring) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  // name används i navigation.navigate(), title är rubriken överst
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: 'Startsida' }}
+      />
+      <Stack.Screen
+        name="MovieList"
+        component={MovieListScreen}
+        options={{ title: 'Filmer' }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Utseende för laddningsskärmen
+const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+  },
+});
