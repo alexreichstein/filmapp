@@ -8,7 +8,7 @@ http:
   url: http://localhost:8080/api/reviews/1
   auth:
     type: bearer
-    token: http://localhost:8080/api/reviews/1
+    token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhbGV4IiwiaWF0IjoxNzkyNDE4NzE0LCJleHAiOjE3OTI1MDUxMTR9.bk5o1Gm1t88p2HAH3qkwYL_Y4Hk7uApj02OFFYkHSfJSPOMgb-99G4mUhN2WBZwC
 
 settings:
   encodeUrl: true

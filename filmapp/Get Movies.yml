@@ -5,8 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8080/api/movies
-  auth: inherit
+  url: http://localhost:8080/api/movies/genres
 
 settings:
   encodeUrl: true
