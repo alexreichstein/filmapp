@@ -1,8 +1,22 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useContext } from 'react';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 
-// Startsidan (US1). Förklarar appens syfte och leder vidare till filmerna.
+import PrimaryButton from '../components/PrimaryButton.js';
+import { AuthContext } from '../context/AuthContext.js';
+
+// Startsidan (US1). Förklarar appens syfte och leder vidare.
 // navigation skickas in automatiskt av React Navigation
 export default function HomeScreen({ navigation }) {
+  const { isLoggedIn, username, logout } = useContext(AuthContext);
+
+  // Loggar ut och bekräftar det för användaren (US14)
+  async function handleLogout() {
+    await logout();
+    Alert.alert('Utloggad', 'Du är nu utloggad.');
+  }
+
+  // Inloggad: visar namnet och en utloggningsknapp.
+  // Utloggad: visar en knapp för att skapa konto
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Filmappen</Text>
@@ -10,16 +24,29 @@ export default function HomeScreen({ navigation }) {
         Utforska filmer, läs vad andra tycker och skriv egna recensioner.
       </Text>
 
-      <Pressable
-        style={styles.button}
-        // Talar om för skärmläsare vad knappen gör (accessibility)
-        accessibilityRole="button"
-        accessibilityLabel="Visa alla filmer"
-        // Byter till filmlistan
-        onPress={() => navigation.navigate('MovieList')}
-      >
-        <Text style={styles.buttonText}>Visa filmer</Text>
-      </Pressable>
+      {isLoggedIn && <Text style={styles.loggedIn}>Inloggad som {username}</Text>}
+
+      <View style={styles.buttons}>
+        <PrimaryButton
+          title="Visa filmer"
+          accessibilityLabel="Visa alla filmer"
+          onPress={() => navigation.navigate('MovieList')}
+        />
+
+        {isLoggedIn ? (
+          <PrimaryButton
+            title="Logga ut"
+            variant="secondary"
+            onPress={handleLogout}
+          />
+        ) : (
+          <PrimaryButton
+            title="Skapa konto"
+            variant="secondary"
+            onPress={() => navigation.navigate('Register')}
+          />
+        )}
+      </View>
     </View>
   );
 }
@@ -41,15 +68,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 24,
   },
-  button: {
-    backgroundColor: '#1e3a8a',
-    padding: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
+  loggedIn: {
     fontSize: 16,
     fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  buttons: {
+    // Avstånd mellan knapparna
+    gap: 12,
   },
 });

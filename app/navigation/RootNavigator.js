@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthContext } from '../context/AuthContext.js';
 import HomeScreen from '../screens/HomeScreen.js';
 import MovieListScreen from '../screens/MovieListScreen.js';
+import RegisterScreen from '../screens/RegisterScreen.js';
 
 // Skapar stack-navigeringen. Skärmarna läggs "på varandra",
 // och tillbaka-knappen tar bort den översta
@@ -37,6 +38,11 @@ export default function RootNavigator() {
         name="MovieList"
         component={MovieListScreen}
         options={{ title: 'Filmer' }}
+      />
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{ title: 'Skapa konto' }}
       />
     </Stack.Navigator>
   );
