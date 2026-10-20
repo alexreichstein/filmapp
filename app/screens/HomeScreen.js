@@ -16,7 +16,7 @@ export default function HomeScreen({ navigation }) {
   }
 
   // Inloggad: visar namnet och en utloggningsknapp.
-  // Utloggad: visar en knapp för att skapa konto
+  // Utloggad: visar knappar för att logga in eller skapa konto
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Filmappen</Text>
@@ -40,11 +40,18 @@ export default function HomeScreen({ navigation }) {
             onPress={handleLogout}
           />
         ) : (
-          <PrimaryButton
-            title="Skapa konto"
-            variant="secondary"
-            onPress={() => navigation.navigate('Register')}
-          />
+          <>
+            <PrimaryButton
+              title="Logga in"
+              variant="secondary"
+              onPress={() => navigation.navigate('Login')}
+            />
+            <PrimaryButton
+              title="Skapa konto"
+              variant="secondary"
+              onPress={() => navigation.navigate('Register')}
+            />
+          </>
         )}
       </View>
     </View>

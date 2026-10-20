@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { AuthContext } from '../context/AuthContext.js';
 import HomeScreen from '../screens/HomeScreen.js';
+import LoginScreen from '../screens/LoginScreen.js';
 import MovieListScreen from '../screens/MovieListScreen.js';
 import RegisterScreen from '../screens/RegisterScreen.js';
 
@@ -38,6 +39,11 @@ export default function RootNavigator() {
         name="MovieList"
         component={MovieListScreen}
         options={{ title: 'Filmer' }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ title: 'Logga in' }}
       />
       <Stack.Screen
         name="Register"
