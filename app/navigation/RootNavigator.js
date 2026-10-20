@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthContext } from '../context/AuthContext.js';
 import HomeScreen from '../screens/HomeScreen.js';
 import LoginScreen from '../screens/LoginScreen.js';
+import MovieDetailsScreen from '../screens/MovieDetailsScreen.js';
 import MovieListScreen from '../screens/MovieListScreen.js';
 import ProfileScreen from '../screens/ProfileScreen.js';
 import RegisterScreen from '../screens/RegisterScreen.js';
@@ -44,6 +45,12 @@ export default function RootNavigator() {
           name="MovieList"
           component={MovieListScreen}
           options={{ title: 'Filmer' }}
+        />
+        <Stack.Screen
+          name="MovieDetails"
+          component={MovieDetailsScreen}
+          // Rubriken blir filmens titel, som skickas med från listan
+          options={({ route }) => ({ title: route.params.title })}
         />
         <Stack.Screen
           name="Login"

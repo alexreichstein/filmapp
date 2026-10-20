@@ -6,7 +6,7 @@ import MovieCard from '../components/MovieCard.js';
 import PrimaryButton from '../components/PrimaryButton.js';
 
 // Lista med alla filmer (US7, US8)
-export default function MovieListScreen() {
+export default function MovieListScreen({ navigation }) {
   // Filmerna från API:t
   const [movies, setMovies] = useState([]);
 
@@ -47,6 +47,12 @@ export default function MovieListScreen() {
     getMovies();
   }
 
+  // Öppnar detaljvyn för en film.
+  // Bara id och titel skickas med, detaljvyn hämtar resten själv
+  function openMovie(movie) {
+    navigation.navigate('MovieDetails', { movieId: movie.id, title: movie.title });
+  }
+
   // Körs en gång när skärmen visas
   useEffect(() => {
     getMovies();
@@ -82,9 +88,11 @@ export default function MovieListScreen() {
       style={styles.list}
       contentContainerStyle={styles.listContent}
       data={movies}
-      // Unik nyckel för varis film, måste vara en text
+      // Unik nyckel för varje film, måste vara en text
       keyExtractor={(item) => String(item.id)}
-      renderItem={({ item }) => <MovieCard movie={item} />}
+      renderItem={({ item }) => (
+        <MovieCard movie={item} onPress={() => openMovie(item)} />
+      )}
       ListEmptyComponent={
         <Text style={styles.message}>Inga filmer hittades.</Text>
       }

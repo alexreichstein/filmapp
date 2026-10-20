@@ -8,11 +8,10 @@ http:
   url: http://localhost:8080/api/movies/2/reviews
   body:
     type: json
-    data: |-
-      {
-        "rating": 11
-      }
-  auth: inherit
+    data: '{ "rating": 7, "text": "Lång men vacker." }'
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJsaXNhIiwiaWF0IjoxNzkyNTEyMTY5LCJleHAiOjE3OTI1OTg1Njl9.Ikr-hPQP_laof4eejlCe1omlY1-Cf_JXskVxEity49b87u_oQzl1RFB4LS2dTUjw
 
 settings:
   encodeUrl: true
