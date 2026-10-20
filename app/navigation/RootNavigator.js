@@ -6,6 +6,7 @@ import { AuthContext } from '../context/AuthContext.js';
 import HomeScreen from '../screens/HomeScreen.js';
 import LoginScreen from '../screens/LoginScreen.js';
 import MovieListScreen from '../screens/MovieListScreen.js';
+import ProfileScreen from '../screens/ProfileScreen.js';
 import RegisterScreen from '../screens/RegisterScreen.js';
 
 // Skapar stack-navigeringen. Skärmarna läggs "på varandra",
@@ -15,7 +16,7 @@ const Stack = createNativeStackNavigator();
 // Alla skärmar i appen.
 // Ligger i en egen fil så att den kan läsa inloggningen från AuthContext
 export default function RootNavigator() {
-  const { isRestoring } = useContext(AuthContext);
+  const { isLoggedIn, isRestoring } = useContext(AuthContext);
 
   // Medan appen kontrollerar en sparad token visas en laddningsindikator,
   // så att användaren inte ser fel skärmar en kort stund
@@ -27,29 +28,44 @@ export default function RootNavigator() {
     );
   }
 
-  // name används i navigation.navigate(), title är rubriken överst
+  // Öppna skärmar finns alltid.
+  // Skyddade skärmar registreras bara när användaren är inloggad (US6),
+  // så en utloggad användare kan inte navigera dit ens med navigation.navigate().
+  // Loggar användaren ut försvinner de skyddade skärmarna automatiskt
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ title: 'Startsida' }}
-      />
-      <Stack.Screen
-        name="MovieList"
-        component={MovieListScreen}
-        options={{ title: 'Filmer' }}
-      />
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ title: 'Logga in' }}
-      />
-      <Stack.Screen
-        name="Register"
-        component={RegisterScreen}
-        options={{ title: 'Skapa konto' }}
-      />
+      <Stack.Group>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'Startsida' }}
+        />
+        <Stack.Screen
+          name="MovieList"
+          component={MovieListScreen}
+          options={{ title: 'Filmer' }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ title: 'Logga in' }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{ title: 'Skapa konto' }}
+        />
+      </Stack.Group>
+
+      {isLoggedIn && (
+        <Stack.Group>
+          <Stack.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{ title: 'Min profil' }}
+          />
+        </Stack.Group>
+      )}
     </Stack.Navigator>
   );
 }

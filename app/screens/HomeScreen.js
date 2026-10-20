@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import PrimaryButton from '../components/PrimaryButton.js';
 import { AuthContext } from '../context/AuthContext.js';
@@ -7,15 +7,9 @@ import { AuthContext } from '../context/AuthContext.js';
 // Startsidan (US1). Förklarar appens syfte och leder vidare.
 // navigation skickas in automatiskt av React Navigation
 export default function HomeScreen({ navigation }) {
-  const { isLoggedIn, username, logout } = useContext(AuthContext);
+  const { isLoggedIn, username } = useContext(AuthContext);
 
-  // Loggar ut och bekräftar det för användaren (US14)
-  async function handleLogout() {
-    await logout();
-    Alert.alert('Utloggad', 'Du är nu utloggad.');
-  }
-
-  // Inloggad: visar namnet och en utloggningsknapp.
+  // Inloggad: visar namnet och en knapp till profilen.
   // Utloggad: visar knappar för att logga in eller skapa konto
   return (
     <View style={styles.container}>
@@ -35,9 +29,9 @@ export default function HomeScreen({ navigation }) {
 
         {isLoggedIn ? (
           <PrimaryButton
-            title="Logga ut"
+            title="Min profil"
             variant="secondary"
-            onPress={handleLogout}
+            onPress={() => navigation.navigate('Profile')}
           />
         ) : (
           <>
