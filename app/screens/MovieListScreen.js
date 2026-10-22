@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 
 import { apiRequest } from '../api/client.js';
@@ -9,10 +9,13 @@ import PrimaryButton from '../components/PrimaryButton.js';
 // Hur länge appen väntar efter senaste tangenttrycket innan den söker
 const SEARCH_DELAY_MS = 400;
 
-// Bygger adressen till filmerna med sökord och genre om de finns, till exempel
-// /api/movies?search=the&genre=Action
+// Standardsorteringen, titel A–Ö
+const DEFAULT_SORT = 'title';
+
+// Bygger adressen till filmerna med sökord, genre och sortering, till exempel
+// /api/movies?search=the&genre=Action&sort=newest
 // encodeURIComponent kodar om mellanslag och å, ä, ö så att de fungerar i en adress
-function buildMoviesPath(search, genre) {
+function buildMoviesPath(search, genre, sort) {
   const params = [];
 
   if (search) {
@@ -23,16 +26,14 @@ function buildMoviesPath(search, genre) {
     params.push(`genre=${encodeURIComponent(genre)}`);
   }
 
-  // Utan parametrar: bara /api/movies
-  if (params.length === 0) {
-    return '/api/movies';
-  }
+  // Sorteringen skickas alltid med
+  params.push(`sort=${sort}`);
 
   // Parametrarna sätts ihop med & mellan sig
   return `/api/movies?${params.join('&')}`;
 }
 
-// Lista med filmer, sökning och genrefilter (US7, US8, US13)
+// Lista med filmer, med sökning, genrefilter och sortering (US7, US8, US13, VG1)
 export default function MovieListScreen({ navigation }) {
   // Filmerna och genrerna från API:t
   const [movies, setMovies] = useState([]);
@@ -44,8 +45,9 @@ export default function MovieListScreen({ navigation }) {
   // Sökordet som skickas till backend, uppdateras först efter en kort paus (debounce)
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
-  // Vald genre, null betyder alla
+  // Vald genre (null betyder alla) och vald sortering
   const [selectedGenre, setSelectedGenre] = useState(null);
+  const [sort, setSort] = useState(DEFAULT_SORT);
 
   // True medan filmerna hämtas
   const [loading, setLoading] = useState(true);
@@ -56,20 +58,37 @@ export default function MovieListScreen({ navigation }) {
   // Felmeddelande om hämtningen misslyckas
   const [errorMessage, setErrorMessage] = useState(null);
 
-  // Hämtar filmerna med aktuellt sökord och vald genre
+  // Numret på det senaste anropet.
+  // useRef behåller värdet mellan omritningar utan att rita om skärmen,
+  // och det nya värdet går att läsa direkt via .current
+  const latestRequestId = useRef(0);
+
+  // Hämtar filmerna med aktuellt sökord, genre och sortering
   async function getMovies() {
+    // Ger anropet ett eget nummer och sparar det som det senaste
+    const requestId = latestRequestId.current + 1;
+    latestRequestId.current = requestId;
+
     try {
       setErrorMessage(null);
-      const path = buildMoviesPath(debouncedSearch.trim(), selectedGenre);
+      const path = buildMoviesPath(debouncedSearch.trim(), selectedGenre, sort);
       const result = await apiRequest(path);
-      setMovies(result);
+
+      // Svaret används bara om inget nyare anrop har skickats under tiden.
+      // Annars kunde ett gammalt svar som kom fram sent skriva över listan
+      if (requestId === latestRequestId.current) {
+        setMovies(result);
+      }
     } catch (error) {
-      // error.message är redan ett begripligt meddelande från apiRequest
-      setErrorMessage(error.message);
+      // Samma kontroll för fel: ett gammalt fel ska inte visas över ett nyare resultat
+      if (requestId === latestRequestId.current) {
+        setErrorMessage(error.message);
+      }
     } finally {
-      // Körs både när det lyckas och misslyckas
-      setLoading(false);
-      setRefreshing(false);
+      if (requestId === latestRequestId.current) {
+        setLoading(false);
+        setRefreshing(false);
+      }
     }
   }
 
@@ -97,12 +116,13 @@ export default function MovieListScreen({ navigation }) {
     getMovies();
   }
 
-  // Tömmer sökfältet och väljer alla genrer.
+  // Återställer sökning, genre och sortering.
   // Sökorden nollställs direkt, utan att vänta på debounce
   function handleClearFilters() {
     setSearchText('');
     setDebouncedSearch('');
     setSelectedGenre(null);
+    setSort(DEFAULT_SORT);
   }
 
   // Öppnar detaljvyn för en film.
@@ -127,14 +147,15 @@ export default function MovieListScreen({ navigation }) {
     return () => clearTimeout(timer);
   }, [searchText]);
 
-  // Hämtar filmerna när skärmen visas och varje gång sökord eller genre ändras.
-  // Genren behöver ingen debounce, eftersom ett tryck är ett enda val
+  // Hämtar filmerna när skärmen visas och varje gång sökord, genre eller sortering ändras.
+  // Genre och sortering behöver ingen debounce, eftersom ett tryck är ett enda val
   useEffect(() => {
     setLoading(true);
     getMovies();
-  }, [debouncedSearch, selectedGenre]);
+  }, [debouncedSearch, selectedGenre, sort]);
 
-  // Om sökord eller genre är valt, för att visa rätt meddelande vid tom lista
+  // Om sökord eller genre är valt, för att visa rätt meddelande vid tom lista.
+  // Sorteringen räknas inte, eftersom den inte kan göra listan tom
   const hasActiveFilters = searchText.trim() !== '' || selectedGenre !== null;
 
   // Innehållet under filtren beror på läget.
@@ -203,6 +224,8 @@ export default function MovieListScreen({ navigation }) {
         genres={genres}
         selectedGenre={selectedGenre}
         onGenreChange={setSelectedGenre}
+        sort={sort}
+        onSortChange={setSort}
       />
       {content}
     </View>

@@ -1,20 +1,31 @@
-import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import Chip from './Chip.js';
 
-// Sökfält och genreknappar ovanför filmlistan (US13).
+// Sorteringsalternativen. value skickas till backend, label visas i appen
+const SORT_OPTIONS = [
+  { value: 'title', label: 'A–Ö', accessibilityLabel: 'Sortera på titel, A till Ö' },
+  { value: 'newest', label: 'Nyaste', accessibilityLabel: 'Sortera nyaste först' },
+  { value: 'oldest', label: 'Äldsta', accessibilityLabel: 'Sortera äldsta först' },
+];
+
+// Sökfält, genreknappar och sortering ovanför filmlistan (US13, VG1).
 // Komponenten visar bara valen. State och hämtning sköts av MovieListScreen.
 // searchText:     det som står i sökfältet
 // onSearchChange: anropas med den nya texten när användaren skriver
 // genres:         alla genrer från API:t
 // selectedGenre:  vald genre, null betyder alla
 // onGenreChange:  anropas med den nya genren, eller null för alla
+// sort:           vald sortering ('title', 'newest' eller 'oldest')
+// onSortChange:   anropas med den nya sorteringen
 export default function MovieFilters({
   searchText,
   onSearchChange,
   genres,
   selectedGenre,
   onGenreChange,
+  sort,
+  onSortChange,
 }) {
   return (
     <View style={styles.container}>
@@ -57,6 +68,19 @@ export default function MovieFilters({
           ))}
         </ScrollView>
       )}
+
+      <View style={[styles.chipRow, styles.sortRow]}>
+        <Text style={styles.sortLabel}>Sortera:</Text>
+        {SORT_OPTIONS.map((option) => (
+          <Chip
+            key={option.value}
+            label={option.label}
+            accessibilityLabel={option.accessibilityLabel}
+            selected={sort === option.value}
+            onPress={() => onSortChange(option.value)}
+          />
+        ))}
+      </View>
     </View>
   );
 }
@@ -85,5 +109,14 @@ const styles = StyleSheet.create({
     // Avstånd mellan knapparna
     gap: 8,
     paddingBottom: 4,
+  },
+  sortRow: {
+    // Sorteringsknapparna radbryts på smala skärmar istället för att hamna utanför (US20)
+    flexWrap: 'wrap',
+    marginTop: 8,
+  },
+  sortLabel: {
+    fontSize: 15,
+    color: '#4b5563',
   },
 });
