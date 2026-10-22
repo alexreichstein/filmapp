@@ -9,26 +9,43 @@ import PrimaryButton from '../components/PrimaryButton.js';
 // Hur länge appen väntar efter senaste tangenttrycket innan den söker
 const SEARCH_DELAY_MS = 400;
 
-// Bygger adressen till filmerna, med sökord om det finns, till exempel
-// /api/movies?search=dark
+// Bygger adressen till filmerna med sökord och genre om de finns, till exempel
+// /api/movies?search=the&genre=Action
 // encodeURIComponent kodar om mellanslag och å, ä, ö så att de fungerar i en adress
-function buildMoviesPath(search) {
+function buildMoviesPath(search, genre) {
+  const params = [];
+
   if (search) {
-    return `/api/movies?search=${encodeURIComponent(search)}`;
+    params.push(`search=${encodeURIComponent(search)}`);
   }
-  return '/api/movies';
+
+  if (genre) {
+    params.push(`genre=${encodeURIComponent(genre)}`);
+  }
+
+  // Utan parametrar: bara /api/movies
+  if (params.length === 0) {
+    return '/api/movies';
+  }
+
+  // Parametrarna sätts ihop med & mellan sig
+  return `/api/movies?${params.join('&')}`;
 }
 
-// Lista med filmer och sökning (US7, US8, US13)
+// Lista med filmer, sökning och genrefilter (US7, US8, US13)
 export default function MovieListScreen({ navigation }) {
-  // Filmerna från API:t
+  // Filmerna och genrerna från API:t
   const [movies, setMovies] = useState([]);
+  const [genres, setGenres] = useState([]);
 
   // Det som står i sökfältet, uppdateras vid varje bokstav
   const [searchText, setSearchText] = useState('');
 
   // Sökordet som skickas till backend, uppdateras först efter en kort paus (debounce)
   const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  // Vald genre, null betyder alla
+  const [selectedGenre, setSelectedGenre] = useState(null);
 
   // True medan filmerna hämtas
   const [loading, setLoading] = useState(true);
@@ -39,11 +56,12 @@ export default function MovieListScreen({ navigation }) {
   // Felmeddelande om hämtningen misslyckas
   const [errorMessage, setErrorMessage] = useState(null);
 
-  // Hämtar filmerna med aktuellt sökord
+  // Hämtar filmerna med aktuellt sökord och vald genre
   async function getMovies() {
     try {
       setErrorMessage(null);
-      const result = await apiRequest(buildMoviesPath(debouncedSearch.trim()));
+      const path = buildMoviesPath(debouncedSearch.trim(), selectedGenre);
+      const result = await apiRequest(path);
       setMovies(result);
     } catch (error) {
       // error.message är redan ett begripligt meddelande från apiRequest
@@ -52,6 +70,18 @@ export default function MovieListScreen({ navigation }) {
       // Körs både när det lyckas och misslyckas
       setLoading(false);
       setRefreshing(false);
+    }
+  }
+
+  // Hämtar genrerna till filterknapparna.
+  // Om det misslyckas döljs bara genreraden, sökningen fungerar ändå.
+  // Felet loggas för utvecklaren men visas inte för användaren
+  async function getGenres() {
+    try {
+      const result = await apiRequest('/api/movies/genres');
+      setGenres(result);
+    } catch (error) {
+      console.log('Kunde inte hämta genrer:', error);
     }
   }
 
@@ -67,10 +97,12 @@ export default function MovieListScreen({ navigation }) {
     getMovies();
   }
 
-  // Tömmer sökfältet. Båda värdena nollställs direkt, utan att vänta på debounce
-  function handleClearSearch() {
+  // Tömmer sökfältet och väljer alla genrer.
+  // Sökorden nollställs direkt, utan att vänta på debounce
+  function handleClearFilters() {
     setSearchText('');
     setDebouncedSearch('');
+    setSelectedGenre(null);
   }
 
   // Öppnar detaljvyn för en film.
@@ -78,6 +110,11 @@ export default function MovieListScreen({ navigation }) {
   function openMovie(movie) {
     navigation.navigate('MovieDetails', { movieId: movie.id, title: movie.title });
   }
+
+  // Hämtar genrerna en gång när skärmen visas
+  useEffect(() => {
+    getGenres();
+  }, []);
 
   // Debounce: startar en timer varje gång texten ändras.
   // Funktionen som returneras avbryter den gamla timern innan en ny startar,
@@ -90,17 +127,18 @@ export default function MovieListScreen({ navigation }) {
     return () => clearTimeout(timer);
   }, [searchText]);
 
-  // Hämtar filmerna när skärmen visas och varje gång sökordet ändras
+  // Hämtar filmerna när skärmen visas och varje gång sökord eller genre ändras.
+  // Genren behöver ingen debounce, eftersom ett tryck är ett enda val
   useEffect(() => {
     setLoading(true);
     getMovies();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, selectedGenre]);
 
-  // Om något står i sökfältet, för att visa rätt meddelande vid tom lista
-  const isSearching = searchText.trim() !== '';
+  // Om sökord eller genre är valt, för att visa rätt meddelande vid tom lista
+  const hasActiveFilters = searchText.trim() !== '' || selectedGenre !== null;
 
-  // Innehållet under sökfältet beror på läget.
-  // Sökfältet står kvar hela tiden, så att tangentbordet inte stängs
+  // Innehållet under filtren beror på läget.
+  // Filtren står kvar hela tiden, så att tangentbordet inte stängs
   let content;
 
   if (loading) {
@@ -136,13 +174,13 @@ export default function MovieListScreen({ navigation }) {
         ListEmptyComponent={
           <View>
             <Text style={styles.message}>
-              {isSearching ? 'Inga filmer matchar din sökning.' : 'Inga filmer hittades.'}
+              {hasActiveFilters ? 'Inga filmer matchar din sökning.' : 'Inga filmer hittades.'}
             </Text>
-            {isSearching && (
+            {hasActiveFilters && (
               <PrimaryButton
-                title="Rensa sökningen"
+                title="Rensa sökning och filter"
                 variant="secondary"
-                onPress={handleClearSearch}
+                onPress={handleClearFilters}
               />
             )}
           </View>
@@ -159,7 +197,13 @@ export default function MovieListScreen({ navigation }) {
 
   return (
     <View style={styles.screen}>
-      <MovieFilters searchText={searchText} onSearchChange={setSearchText} />
+      <MovieFilters
+        searchText={searchText}
+        onSearchChange={setSearchText}
+        genres={genres}
+        selectedGenre={selectedGenre}
+        onGenreChange={setSelectedGenre}
+      />
       {content}
     </View>
   );

@@ -15,6 +15,7 @@ import com.alexreichstein.filmapp.service.MovieService;
 // @RestController betyder att klassen tar emot HTTP-anrop
 // och att svaren automatiskt görs om till JSON
 @RestController
+
 // Alla endpoints i klassen börjar med /api/movies
 @RequestMapping("/api/movies")
 public class MovieController {
@@ -28,10 +29,6 @@ public class MovieController {
     }
 
     // GET /api/movies
-    // Med valfria query-parametrar, till exempel:
-    // /api/movies?search=dark&genre=Action&sort=newest
-    // @RequestParam(required = false) betyder att parametern inte måste skickas,
-    // och då blir värdet null
     @GetMapping
     public List<Movie> getMovies(@RequestParam(required = false) String search,
                                  @RequestParam(required = false) String genre,
@@ -40,7 +37,6 @@ public class MovieController {
     }
 
     // GET /api/movies/genres
-    // Alla genrer som finns, används för filterknapparna i appen.
     // Spring väljer den här före /{id} eftersom "genres" är en exakt adress
     @GetMapping("/genres")
     public List<String> getGenres() {
