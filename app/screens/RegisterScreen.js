@@ -53,9 +53,11 @@ export default function RegisterScreen({ navigation }) {
       // Skapar kontot och loggar in direkt (se AuthContext)
       await register(trimmedUsername, password);
 
-      // Tydlig återkoppling (US14) och tillbaka till startsidan
+      // Tydlig återkoppling (US14).
+      // goBack tar användaren tillbaka dit hen var innan,
+      // till exempel till filmen hen ville recensera
       Alert.alert('Välkommen!', `Ditt konto har skapats och du är inloggad som ${trimmedUsername}.`);
-      navigation.popToTop();
+      navigation.goBack();
     } catch (error) {
       // error.message är ett begripligt meddelande, till exempel från backend
       setErrorMessage(error.message);

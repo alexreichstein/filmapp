@@ -46,9 +46,11 @@ export default function LoginScreen({ navigation }) {
       // Hämtar token från backend och sparar den i SecureStore (se AuthContext)
       await login(trimmedUsername, password);
 
-      // Tydlig återkoppling (US14) och tillbaka till startsidan
+      // Tydlig återkoppling (US14).
+      // goBack tar användaren tillbaka dit hen var innan inloggningen,
+      // till exempel till filmen hen ville recensera
       Alert.alert('Inloggad', `Välkommen tillbaka, ${trimmedUsername}!`);
-      navigation.popToTop();
+      navigation.goBack();
     } catch (error) {
       // Vid fel uppgifter: "Fel användarnamn eller lösenord" från backend
       setErrorMessage(error.message);
@@ -107,7 +109,7 @@ export default function LoginScreen({ navigation }) {
           accessibilityRole="link"
           accessibilityLabel="Har du inget konto? Skapa konto"
           // replace byter ut inloggningen mot registreringen,
-          // så att tillbaka-pilen leder till startsidan
+          // så att tillbaka-pilen och goBack leder till skärmen före inloggningen
           onPress={() => navigation.replace('Register')}
         >
           <Text style={styles.linkText}>Har du inget konto? Skapa konto</Text>
