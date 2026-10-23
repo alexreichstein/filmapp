@@ -13,6 +13,7 @@ import {
 import ErrorMessage from '../components/ErrorMessage.js';
 import FormField from '../components/FormField.js';
 import PrimaryButton from '../components/PrimaryButton.js';
+import colors from '../constants/colors.js';
 import { AuthContext } from '../context/AuthContext.js';
 
 // Skärm för inloggning (US4)
@@ -123,7 +124,7 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
   container: {
     padding: 20,
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   linkText: {
-    color: '#1e3a8a',
+    color: colors.primary,
     fontSize: 16,
     textDecorationLine: 'underline',
   },

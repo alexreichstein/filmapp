@@ -7,6 +7,7 @@ import FavoriteButton from '../components/FavoriteButton.js';
 import PrimaryButton from '../components/PrimaryButton.js';
 import ReviewCard from '../components/ReviewCard.js';
 import ShareButton from '../components/ShareButton.js';
+import colors from '../constants/colors.js';
 import { AuthContext } from '../context/AuthContext.js';
 import useDeleteReview from '../hooks/useDeleteReview.js';
 
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
   message: {
     fontSize: 16,
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   list: {
-    backgroundColor: '#f3f4f6',
+    backgroundColor: colors.background,
   },
   listContent: {
     padding: 16,
@@ -288,14 +289,14 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   placeholder: {
-    backgroundColor: '#cbd5e1',
+    backgroundColor: colors.posterPlaceholder,
     alignItems: 'center',
     justifyContent: 'center',
   },
   placeholderText: {
     fontSize: 64,
     fontWeight: 'bold',
-    color: '#475569',
+    color: colors.posterPlaceholderText,
   },
   title: {
     fontSize: 26,
@@ -304,7 +305,7 @@ const styles = StyleSheet.create({
   },
   meta: {
     fontSize: 15,
-    color: '#4b5563',
+    color: colors.textSecondary,
     marginBottom: 4,
   },
   actions: {
@@ -331,7 +332,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   reviewsError: {
-    color: '#b91c1c',
+    color: colors.error,
     fontSize: 16,
     marginBottom: 12,
   },

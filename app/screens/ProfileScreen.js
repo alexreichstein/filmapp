@@ -5,6 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { apiRequest } from '../api/client.js';
 import PrimaryButton from '../components/PrimaryButton.js';
 import ReviewCard from '../components/ReviewCard.js';
+import colors from '../constants/colors.js';
 import { AuthContext } from '../context/AuthContext.js';
 import useDeleteReview from '../hooks/useDeleteReview.js';
 
@@ -210,7 +211,7 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   list: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: colors.background,
   },
   listContent: {
     padding: 16,

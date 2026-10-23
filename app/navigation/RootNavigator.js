@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import colors from '../constants/colors.js';
 import { AuthContext } from '../context/AuthContext.js';
 import FavoritesScreen from '../screens/FavoritesScreen.js';
 import HomeScreen from '../screens/HomeScreen.js';
@@ -98,6 +99,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
 });

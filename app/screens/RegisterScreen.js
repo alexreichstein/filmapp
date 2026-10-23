@@ -12,6 +12,7 @@ import {
 import ErrorMessage from '../components/ErrorMessage.js';
 import FormField from '../components/FormField.js';
 import PrimaryButton from '../components/PrimaryButton.js';
+import colors from '../constants/colors.js';
 import { AuthContext } from '../context/AuthContext.js';
 
 // Skärm för att skapa ett nytt konto (US3)
@@ -131,7 +132,7 @@ export default function RegisterScreen({ navigation }) {
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
   container: {
     padding: 20,

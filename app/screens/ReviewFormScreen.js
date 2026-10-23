@@ -14,6 +14,7 @@ import ErrorMessage from '../components/ErrorMessage.js';
 import FormField from '../components/FormField.js';
 import PrimaryButton from '../components/PrimaryButton.js';
 import RatingPicker from '../components/RatingPicker.js';
+import colors from '../constants/colors.js';
 import { AuthContext } from '../context/AuthContext.js';
 
 // Samma gräns som i backend
@@ -66,7 +67,7 @@ export default function ReviewFormScreen({ route, navigation }) {
         Alert.alert('Sparad', 'Din recension har sparats.');
       }
 
-      // Tillbaka till detaljvyn, som hämtar recensionerna igen
+      // Tillbaka till skärmen innan, som hämtar recensionerna igen
       navigation.goBack();
     } catch (error) {
       // 401 betyder att inloggningen har gått ut.
@@ -141,7 +142,7 @@ export default function ReviewFormScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
   container: {
     padding: 20,
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
   },
   counter: {
     fontSize: 13,
-    color: '#6b7280',
+    color: colors.textMuted,
     textAlign: 'right',
     marginTop: -8,
     marginBottom: 16,

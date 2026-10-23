@@ -5,6 +5,7 @@ import { apiRequest } from '../api/client.js';
 import MovieCard from '../components/MovieCard.js';
 import MovieFilters from '../components/MovieFilters.js';
 import PrimaryButton from '../components/PrimaryButton.js';
+import colors from '../constants/colors.js';
 
 // Hur länge appen väntar efter senaste tangenttrycket innan den söker
 const SEARCH_DELAY_MS = 400;
@@ -236,7 +237,7 @@ export default function MovieListScreen({ navigation }) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: colors.background,
   },
   center: {
     flex: 1,

@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 import MovieCard from '../components/MovieCard.js';
 import PrimaryButton from '../components/PrimaryButton.js';
+import colors from '../constants/colors.js';
 import { FavoritesContext } from '../context/FavoritesContext.js';
 
 // Lista med användarens favoritfilmer.
@@ -54,7 +55,7 @@ export default function FavoritesScreen({ navigation }) {
 const styles = StyleSheet.create({
   list: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: colors.background,
   },
   listContent: {
     padding: 16,
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
   },
   hint: {
     fontSize: 16,
-    color: '#4b5563',
+    color: colors.textSecondary,
     textAlign: 'center',
     marginBottom: 20,
   },

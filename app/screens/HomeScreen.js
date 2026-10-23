@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import PrimaryButton from '../components/PrimaryButton.js';
+import colors from '../constants/colors.js';
 import { AuthContext } from '../context/AuthContext.js';
 import { FavoritesContext } from '../context/FavoritesContext.js';
 
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
   title: {
     fontSize: 32,
