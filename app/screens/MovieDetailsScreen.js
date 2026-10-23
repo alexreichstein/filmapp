@@ -6,6 +6,7 @@ import { apiRequest } from '../api/client.js';
 import FavoriteButton from '../components/FavoriteButton.js';
 import PrimaryButton from '../components/PrimaryButton.js';
 import ReviewCard from '../components/ReviewCard.js';
+import ShareButton from '../components/ShareButton.js';
 import { AuthContext } from '../context/AuthContext.js';
 import useDeleteReview from '../hooks/useDeleteReview.js';
 
@@ -202,8 +203,13 @@ export default function MovieDetailsScreen({ route, navigation }) {
       </Text>
       <Text style={styles.meta}>Regi: {movie.director}</Text>
 
-      <View style={styles.favoriteArea}>
+      <View style={styles.actions}>
         <FavoriteButton movie={movie} />
+        <ShareButton
+          movie={movie}
+          averageRating={averageRating}
+          reviewCount={reviews.length}
+        />
       </View>
 
       <Text style={styles.description}>{movie.description}</Text>
@@ -301,8 +307,10 @@ const styles = StyleSheet.create({
     color: '#4b5563',
     marginBottom: 4,
   },
-  favoriteArea: {
+  actions: {
+    // Favorit- och delningsknappen under varandra, med avstånd emellan
     marginTop: 12,
+    gap: 10,
   },
   description: {
     fontSize: 16,
