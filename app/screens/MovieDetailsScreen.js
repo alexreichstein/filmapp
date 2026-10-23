@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Image, StyleSheet, Text, View } from 'reac
 import { useFocusEffect } from '@react-navigation/native';
 
 import { apiRequest } from '../api/client.js';
+import FavoriteButton from '../components/FavoriteButton.js';
 import PrimaryButton from '../components/PrimaryButton.js';
 import ReviewCard from '../components/ReviewCard.js';
 import { AuthContext } from '../context/AuthContext.js';
@@ -200,6 +201,11 @@ export default function MovieDetailsScreen({ route, navigation }) {
         {movie.releaseYear} · {movie.genre}
       </Text>
       <Text style={styles.meta}>Regi: {movie.director}</Text>
+
+      <View style={styles.favoriteArea}>
+        <FavoriteButton movie={movie} />
+      </View>
+
       <Text style={styles.description}>{movie.description}</Text>
 
       <Text style={styles.sectionTitle} accessibilityRole="header">
@@ -295,10 +301,13 @@ const styles = StyleSheet.create({
     color: '#4b5563',
     marginBottom: 4,
   },
+  favoriteArea: {
+    marginTop: 12,
+  },
   description: {
     fontSize: 16,
     lineHeight: 22,
-    marginTop: 8,
+    marginTop: 16,
     marginBottom: 24,
   },
   sectionTitle: {
