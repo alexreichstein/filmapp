@@ -3,12 +3,15 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import PrimaryButton from '../components/PrimaryButton.js';
 import { AuthContext } from '../context/AuthContext.js';
+import { FavoritesContext } from '../context/FavoritesContext.js';
 
 // Startsidan (US1). Förklarar appens syfte och leder vidare.
 // navigation skickas in automatiskt av React Navigation
 export default function HomeScreen({ navigation }) {
   const { isLoggedIn, username } = useContext(AuthContext);
+  const { favorites } = useContext(FavoritesContext);
 
+  // Alla ser filmer och favoriter.
   // Inloggad: visar namnet och en knapp till profilen.
   // Utloggad: visar knappar för att logga in eller skapa konto
   return (
@@ -25,6 +28,13 @@ export default function HomeScreen({ navigation }) {
           title="Visa filmer"
           accessibilityLabel="Visa alla filmer"
           onPress={() => navigation.navigate('MovieList')}
+        />
+
+        <PrimaryButton
+          title={`Mina favoriter (${favorites.length})`}
+          variant="secondary"
+          accessibilityLabel={`Mina favoriter, ${favorites.length} sparade`}
+          onPress={() => navigation.navigate('Favorites')}
         />
 
         {isLoggedIn ? (

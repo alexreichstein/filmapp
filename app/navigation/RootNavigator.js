@@ -3,6 +3,7 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { AuthContext } from '../context/AuthContext.js';
+import FavoritesScreen from '../screens/FavoritesScreen.js';
 import HomeScreen from '../screens/HomeScreen.js';
 import LoginScreen from '../screens/LoginScreen.js';
 import MovieDetailsScreen from '../screens/MovieDetailsScreen.js';
@@ -52,6 +53,11 @@ export default function RootNavigator() {
           component={MovieDetailsScreen}
           // Rubriken blir filmens titel, som skickas med från listan
           options={({ route }) => ({ title: route.params.title })}
+        />
+        <Stack.Screen
+          name="Favorites"
+          component={FavoritesScreen}
+          options={{ title: 'Mina favoriter' }}
         />
         <Stack.Screen
           name="Login"
