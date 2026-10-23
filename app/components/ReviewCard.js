@@ -1,5 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
+import colors from '../constants/colors.js';
+
 // Gör om en tidpunkt från API:t (till exempel "2026-10-19T13:54:36Z")
 // till ett svenskt datum, till exempel "2026-10-19"
 function formatDate(isoString) {
@@ -48,12 +50,12 @@ export default function ReviewCard({ review, showMovieTitle = false, children })
 // Utseende för recensionen
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 8,
     padding: 12,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: colors.border,
   },
   header: {
     // Namn till vänster och betyg till höger
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
   rating: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#1e3a8a',
+    color: colors.primary,
   },
   text: {
     fontSize: 15,
@@ -80,6 +82,6 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 13,
-    color: '#6b7280',
+    color: colors.textMuted,
   },
 });

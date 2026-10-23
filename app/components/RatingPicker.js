@@ -1,5 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import colors from '../constants/colors.js';
+
 // Betygen 1 till 10 som en lista: [1, 2, 3, ..., 10]
 const RATINGS = Array.from({ length: 10 }, (_, index) => index + 1);
 
@@ -52,20 +54,20 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: '#1e3a8a',
+    borderColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
   selected: {
-    backgroundColor: '#1e3a8a',
+    backgroundColor: colors.primary,
   },
   optionText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#1e3a8a',
+    color: colors.primary,
   },
   selectedText: {
-    color: '#fff',
+    color: colors.white,
   },
 });

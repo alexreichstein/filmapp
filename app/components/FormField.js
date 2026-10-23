@@ -1,5 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
+import colors from '../constants/colors.js';
+
 // Ett formulärfält: en rubrik och ett textfält under.
 // label:      rubriken, används även som accessibilityLabel
 // style:      extra stil för textfältet, till exempel större höjd för långa texter
@@ -14,7 +16,7 @@ export default function FormField({ label, style, ...inputProps }) {
         // Skärmläsare läser upp rubriken när fältet får fokus
         accessibilityLabel={label}
         // Tydlig färg på platshållartexten så att den syns
-        placeholderTextColor="#6b7280"
+        placeholderTextColor={colors.textMuted}
         {...inputProps}
       />
     </View>
@@ -32,7 +34,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: colors.inputBorder,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,

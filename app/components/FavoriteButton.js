@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { AccessibilityInfo, Alert, Pressable, StyleSheet, Text } from 'react-native';
 
+import colors from '../constants/colors.js';
 import { FavoritesContext } from '../context/FavoritesContext.js';
 
 // Knapp med ett hjärta för att spara eller ta bort en film som favorit.
@@ -58,22 +59,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: '#be123c',
-    backgroundColor: '#fff',
+    borderColor: colors.favorite,
+    backgroundColor: colors.white,
   },
   active: {
-    backgroundColor: '#ffe4e6',
+    backgroundColor: colors.favoriteBackground,
   },
   pressed: {
     opacity: 0.7,
   },
   heart: {
     fontSize: 22,
-    color: '#be123c',
+    color: colors.favorite,
   },
   text: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#be123c',
+    color: colors.favorite,
   },
 });

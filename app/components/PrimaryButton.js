@@ -1,5 +1,7 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 
+import colors from '../constants/colors.js';
+
 // Återanvändbar knapp som används i hela appen.
 // title:    texten på knappen
 // onPress:  vad som händer vid tryck
@@ -39,7 +41,7 @@ export default function PrimaryButton({
       accessibilityState={{ disabled: isDisabled, busy: loading }}
     >
       {loading ? (
-        <ActivityIndicator color={isSecondary ? '#1e3a8a' : '#fff'} />
+        <ActivityIndicator color={isSecondary ? colors.primary : colors.white} />
       ) : (
         <Text style={[styles.text, isSecondary && styles.secondaryText]}>{title}</Text>
       )}
@@ -50,7 +52,7 @@ export default function PrimaryButton({
 // Utseende för knappen
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#1e3a8a',
+    backgroundColor: colors.primary,
     // Minst 48 punkter hög så att den är lätt att trycka på
     minHeight: 48,
     paddingHorizontal: 16,
@@ -59,12 +61,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   secondary: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderWidth: 2,
-    borderColor: '#1e3a8a',
+    borderColor: colors.primary,
   },
   danger: {
-    backgroundColor: '#b91c1c',
+    backgroundColor: colors.danger,
   },
   pressed: {
     opacity: 0.8,
@@ -73,11 +75,11 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   text: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },
   secondaryText: {
-    color: '#1e3a8a',
+    color: colors.primary,
   },
 });

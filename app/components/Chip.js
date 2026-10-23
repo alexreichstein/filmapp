@@ -1,5 +1,7 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
 
+import colors from '../constants/colors.js';
+
 // Liten valbar knapp, används för genrer och sortering.
 // label:    texten på knappen
 // selected: om knappen är vald just nu
@@ -32,13 +34,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 22,
     borderWidth: 2,
-    borderColor: '#1e3a8a',
-    backgroundColor: '#fff',
+    borderColor: colors.primary,
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },
   selected: {
-    backgroundColor: '#1e3a8a',
+    backgroundColor: colors.primary,
   },
   pressed: {
     opacity: 0.7,
@@ -46,9 +48,9 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#1e3a8a',
+    color: colors.primary,
   },
   selectedText: {
-    color: '#fff',
+    color: colors.white,
   },
 });

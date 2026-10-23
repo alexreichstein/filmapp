@@ -1,5 +1,6 @@
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import colors from '../constants/colors.js';
 import Chip from './Chip.js';
 
 // Sorteringsalternativen. value skickas till backend, label visas i appen
@@ -34,7 +35,7 @@ export default function MovieFilters({
         value={searchText}
         onChangeText={onSearchChange}
         placeholder="Sök på titel"
-        placeholderTextColor="#6b7280"
+        placeholderTextColor={colors.textMuted}
         // Ingen autokorrigering, så att titlar inte ändras medan man skriver
         autoCorrect={false}
         // Tangentbordets Enter-knapp visas som "Sök"
@@ -88,16 +89,16 @@ export default function MovieFilters({
 // Utseende för filtren
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: colors.border,
   },
   search: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: colors.inputBorder,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
@@ -117,6 +118,6 @@ const styles = StyleSheet.create({
   },
   sortLabel: {
     fontSize: 15,
-    color: '#4b5563',
+    color: colors.textSecondary,
   },
 });

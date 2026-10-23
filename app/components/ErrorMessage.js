@@ -1,5 +1,7 @@
 import { StyleSheet, Text } from 'react-native';
 
+import colors from '../constants/colors.js';
+
 // Visar ett felmeddelande i rött.
 // Om message är tomt visas ingenting, så skärmarna kan alltid ha komponenten på plats
 export default function ErrorMessage({ message }) {
@@ -22,7 +24,7 @@ export default function ErrorMessage({ message }) {
 // Utseende för felmeddelandet
 const styles = StyleSheet.create({
   error: {
-    color: '#b91c1c',
+    color: colors.error,
     fontSize: 16,
     marginBottom: 16,
   },

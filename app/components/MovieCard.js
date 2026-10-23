@@ -1,5 +1,7 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import colors from '../constants/colors.js';
+
 // Visar en film i en lista: affisch, titel, år, genre och regissör.
 // movie:   filmen från API:t
 // onPress: vad som händer när kortet trycks på (till exempel öppna detaljvyn)
@@ -51,12 +53,12 @@ const styles = StyleSheet.create({
   card: {
     // Affisch till vänster och text till höger
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 8,
     padding: 12,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: colors.border,
   },
   pressed: {
     opacity: 0.7,
@@ -68,14 +70,14 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   placeholder: {
-    backgroundColor: '#cbd5e1',
+    backgroundColor: colors.posterPlaceholder,
     alignItems: 'center',
     justifyContent: 'center',
   },
   placeholderText: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#475569',
+    color: colors.posterPlaceholderText,
   },
   info: {
     // Texten tar resten av bredden, så att långa titlar radbryts
@@ -91,11 +93,11 @@ const styles = StyleSheet.create({
   },
   meta: {
     fontSize: 14,
-    color: '#4b5563',
+    color: colors.textSecondary,
     marginBottom: 4,
   },
   director: {
     fontSize: 14,
-    color: '#4b5563',
+    color: colors.textSecondary,
   },
 });
