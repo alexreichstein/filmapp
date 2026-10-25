@@ -4,9 +4,11 @@ info:
   seq: 10
 
 http:
-  method: DELETE
-  url: http://localhost:8080/api/movies/1
-  auth: inherit
+  method: GET
+  url: http://localhost:8080/api/finnsinte
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhbGV4IiwiaWF0IjoxNzkyNzM5NzM3LCJleHAiOjE3OTI4MjYxMzd9.kfXDqZtNVK5d8yHz7IQ5MPC30U7Dv8T0PCj6_6iSs_hB779V2KIdQ5ZQfMIHubMN
 
 settings:
   encodeUrl: true

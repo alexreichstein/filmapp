@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8080/api/users/me
+  url: http://localhost:8080/api/movies/999
   auth:
     type: bearer
     token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhbGV4IiwiaWF0IjoxNzkyMzk3MzA2LCJleHAiOjE3OTI0ODM3MDZ9.BhKcSEeSkyMGIC9SUdjbHxLnVEmunuHDCIxAz9w-xuHcED5xHsSCoIBEEbkvYTBS
@@ -15,3 +15,4 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+  forwardAuthorizationHeader: true
